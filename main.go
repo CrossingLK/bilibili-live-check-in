@@ -22,6 +22,8 @@ var (
 
 func main() {
 
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+
 	if cookie == "" || roomID == "" || csrf == "" {
 		log.Print("no configuration was read, please check the configuration")
 		return
@@ -84,5 +86,5 @@ func send(cookie, roomID, csrf string) {
 		return
 	}
 
-	log.Print("弹幕打卡成功")
+	log.Print("message sent successfully")
 }
