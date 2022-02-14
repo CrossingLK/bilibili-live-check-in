@@ -30,12 +30,13 @@ func main() {
 		return
 	}
 
-	send(cookie, roomID, csrf)
+	sendMessages(cookie, roomID, csrf)
 }
 
 func sendMessages(cookie, roomID, csrf string) {
 	roomIDs := strings.Split(roomID, ";")
 	for _, id := range roomIDs {
+		time.Sleep(time.Duration(1) * time.Second)
 		send(cookie, id, csrf)
 	}
 	log.Print("message sent successfully")
