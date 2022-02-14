@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -30,6 +31,14 @@ func main() {
 	}
 
 	send(cookie, roomID, csrf)
+}
+
+func sendMessages(cookie, roomID, csrf string) {
+	roomIDs := strings.Split(roomID, ";")
+	for _, id := range roomIDs {
+		send(cookie, id, csrf)
+	}
+	log.Print("message sent successfully")
 }
 
 func send(cookie, roomID, csrf string) {
@@ -62,7 +71,12 @@ func send(cookie, roomID, csrf string) {
 		return
 	}
 
-	defer response.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Print(err)
+		}
+	}(response.Body)
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Print(err)
@@ -85,6 +99,4 @@ func send(cookie, roomID, csrf string) {
 		log.Print(string(responseBytes))
 		return
 	}
-
-	log.Print("message sent successfully")
 }
